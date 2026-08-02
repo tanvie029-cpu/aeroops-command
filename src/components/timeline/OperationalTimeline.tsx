@@ -15,7 +15,6 @@ interface TimelineEventProps {
   status: TimelineEventStatus;
   title: string;
   description?: string;
-  isLast?: boolean;
 }
 
 export function TimelineEvent({
@@ -23,18 +22,16 @@ export function TimelineEvent({
   status,
   title,
   description,
-  isLast = false,
 }: TimelineEventProps) {
   return (
-    <li className="relative flex gap-3 pl-1">
-      <div className="flex flex-col items-center">
+    <li className="flex items-center gap-3 rounded-md border border-slate-800 bg-slate-900 px-3 py-2">
+      <div className="flex items-center">
         <Circle
           className={`h-2.5 w-2.5 shrink-0 fill-current ${STATUS_DOT_STYLES[status]}`}
           aria-hidden="true"
         />
-        {!isLast && <span className="mt-1 w-px flex-1 bg-slate-800" aria-hidden="true" />}
       </div>
-      <div className="flex-1 pb-3">
+      <div className="flex-1">
         <div className="flex items-baseline gap-2">
           <span className="font-mono text-[11px] text-slate-500">{timestampUtc}</span>
           <span className="text-xs font-medium text-slate-200">{title}</span>
@@ -63,9 +60,9 @@ export function OperationalTimeline({ children }: OperationalTimelineProps) {
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 py-2.5">
+      <div className="flex-1 overflow-hidden px-3 py-2">
         {hasEvents ? (
-          <ol className="flex flex-col">{children}</ol>
+          <ol className="space-y-2">{children}</ol>
         ) : (
           <div className="flex h-full items-center justify-center py-4">
             <p className="text-xs text-slate-500">No operational events recorded</p>

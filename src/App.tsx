@@ -260,14 +260,13 @@ function formatDelay(minutes: number) {
   <OperationalTimeline>
     {airportData?.gateEvents
       .slice(0, 8)
-      .map((event, index) => (
+      .map((event) => ( 
         <TimelineEvent
           key={event.eventId}
           timestampUtc={event.timestamp}
           status="normal"
           title={event.eventType}
           description={`${event.flightId} • Gate ${event.gate}`}
-          isLast={index === Math.min(airportData.gateEvents.length, 8) - 1}
         />
       ))}
   </OperationalTimeline>

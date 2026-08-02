@@ -46,7 +46,7 @@ export function MainLayout({
 
       <footer
   aria-label="Operational Timeline"
-  className="h-16 shrink-0 overflow-y-auto border-t border-slate-800 bg-slate-900 px-4 py-2"
+  className="h-24 shrink-0 overflow-hidden border-t border-slate-800 bg-slate-900 px-4 py-2"
 >
   {operationalTimeline}
 </footer>
