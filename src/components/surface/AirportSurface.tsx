@@ -38,7 +38,15 @@ function GateGroup({
               : status === "delayed"
               ? "bg-red-500/10 text-red-300"
               : "bg-slate-900 text-slate-500";
-
+              
+         if (gateId.startsWith("EMPTY-")) {
+  return (
+    <div
+      key={gateId}
+      className="h-12 bg-slate-900"
+    />
+  );
+}
           return (
             <button
               key={gateId}
@@ -48,7 +56,7 @@ function GateGroup({
               className={`
                 relative
                 flex
-                h-14
+                h-12
                 flex-col
                 items-center
                 justify-center
@@ -87,7 +95,7 @@ function GateGroup({
 
 function TaxiwayStrip({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-2 border-y border-dashed border-slate-800 py-1">
+    <div className="flex items-center gap-2 border-y border-dashed border-slate-800 py-0.5">
       <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-slate-500">
         {label}
       </span>
@@ -99,7 +107,7 @@ function TaxiwayStrip({ label }: { label: string }) {
 
 function RunwayStrip({ label }: { label: string }) {
   return (
-    <div className="relative flex items-center justify-center overflow-hidden border-y border-slate-700 bg-slate-900 py-3">
+    <div className="relative flex items-center justify-center overflow-hidden border-y border-slate-700 bg-slate-900 py-2">
       <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 justify-center gap-3">
         {Array.from({ length: 9 }).map((_, i) => (
           <span key={i} className="h-px w-6 bg-slate-600" />
@@ -145,13 +153,13 @@ export function AirportSurface({
 const sortedGates = [...gates].sort((a, b) => {
   const numA = parseInt(a.replace(/\D/g, ""));
   const numB = parseInt(b.replace(/\D/g, ""));
-  return numA - numB;
+  return numA - numB;   
 });
 
 const terminalA = fillTerminal(sortedGates.slice(0,12),12);
 const terminalB = fillTerminal(sortedGates.slice(12,24),12);
 const terminalC = fillTerminal(sortedGates.slice(24,36),12);
-const terminalD = fillTerminal(sortedGates.slice(36),12);
+const terminalD = fillTerminal(sortedGates.slice(36),14);
 
   return (
     <section
@@ -159,7 +167,7 @@ const terminalD = fillTerminal(sortedGates.slice(36),12);
       flex
       h-full
       flex-col
-      overflow-y-auto
+      overflow-hidden
       bg-slate-950
       bg-[linear-gradient(to_right,rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.06)_1px,transparent_1px)]
       bg-[size:24px_24px]
@@ -167,7 +175,7 @@ const terminalD = fillTerminal(sortedGates.slice(36),12);
       py-3
       "
     >
-      <header className="mb-3">
+      <header className="mb-2">
         <h2 className="text-sm font-semibold text-white">
           Airport Surface Overview
         </h2>
@@ -177,7 +185,7 @@ const terminalD = fillTerminal(sortedGates.slice(36),12);
         </p>
       </header>
 
-      <div className="grid gap-3 lg:grid-cols-2">
+      <div className="grid gap-2 lg:grid-cols-2">
 
         <GateGroup
           terminalLabel="Terminal A"
@@ -213,7 +221,7 @@ const terminalD = fillTerminal(sortedGates.slice(36),12);
 
       </div>
 
-      <div className="mt-3 space-y-2">
+      <div className="mt-2 space-y-2">
 
         <TaxiwayStrip label="Taxiway Alpha" />
 
