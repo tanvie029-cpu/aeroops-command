@@ -24,6 +24,8 @@ function App() {
   const [airportData, setAirportData] = useState<AirportData | null>(null);
   const [isLoadingAirportData, setIsLoadingAirportData] = useState(true);
   const [airportDataError, setAirportDataError] = useState<string | null>(null);
+  const [selectedGateId, setSelectedGateId] = useState<string | null>(null);
+  const uniqueGates = [...new Set(airportData?.flights.map(f => f.gate) ?? [])].sort();
 
 
 
@@ -35,7 +37,14 @@ function App() {
 }
 
 const handleGateSelect = (gateId: string) => {
-  const matchingFlight = airportData?.flights.find((flight) => flight.gate === gateId);
+  setSelectedGateId(gateId);
+
+  const matchingFlight = airportData?.flights.find(
+    (flight) => flight.gate === gateId
+  );
+  console.log(
+  [...new Set(airportData!.flights.map(f => f.gate))].sort()
+);
 
   if (!matchingFlight) {
     setActiveIncident(null);
@@ -108,6 +117,8 @@ if (airportDataError) {
   );
 }
 
+console.log("Selected Gate:", selectedGateId);
+console.log("Active Incident:", activeIncident);
   return (
     <MainLayout
       header={
@@ -126,7 +137,8 @@ if (airportDataError) {
       operationalAlerts={<OperationalAlerts alertCount={0} />}
       airportSurface={
         <AirportSurface
-          activeGateId={activeIncident?.gate ?? null}
+         gates={uniqueGates}
+          activeGateId={selectedGateId}
           onGateClick={handleGateSelect}
         />
       }

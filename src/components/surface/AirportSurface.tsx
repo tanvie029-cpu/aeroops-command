@@ -101,16 +101,15 @@ function LegendItem({ swatchClassName, label }: LegendItemProps) {
   );
 }
 
-const TERMINAL_A_GATES = ["A1", "A2", "A3", "A4"] as const;
-const TERMINAL_B_GATES = ["B1", "B2", "B3", "B4"] as const;
-
 
 interface AirportSurfaceProps {
+  gates: readonly string[];
   activeGateId?: string | null;
   onGateClick?: (gateId: string) => void;
 }
 
 export function AirportSurface({
+  gates,
   activeGateId,
   onGateClick,
 }: AirportSurfaceProps) {
@@ -126,10 +125,14 @@ export function AirportSurface({
       </header>
 
       <div className="flex flex-1 flex-col gap-3">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <GateGroup terminalLabel="Terminal A" gateIds={TERMINAL_A_GATES} activeGateId={activeGateId} onGateClick={onGateClick}/>
-          <GateGroup terminalLabel="Terminal B" gateIds={TERMINAL_B_GATES} activeGateId={activeGateId} onGateClick={onGateClick}/>
-        </div>
+        <div>
+    <GateGroup
+    terminalLabel="Terminal Gates"
+    gateIds={gates}
+    activeGateId={activeGateId}
+    onGateClick={onGateClick}
+  />
+</div>
 
         <div className="flex flex-col gap-2">
           <TaxiwayStrip label="Taxiway Alpha" />
