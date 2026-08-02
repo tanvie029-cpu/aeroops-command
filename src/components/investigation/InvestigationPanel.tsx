@@ -91,8 +91,31 @@ if (investigationData?.maintenance) {
             </InvestigationSection>
 
             <InvestigationSection icon={<Gauge className="h-3.5 w-3.5" />} title="Operational Impact">
-              <p className="capitalize">Severity: {incident.severity}</p>
-              <p className="capitalize">Status: {incident.status}</p>
+              <div className="flex flex-wrap gap-2">
+  <span
+    className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+      incident.severity === "critical"
+        ? "bg-red-600 text-white"
+        : incident.severity === "high"
+        ? "bg-orange-500 text-white"
+        : incident.severity === "medium"
+        ? "bg-yellow-500 text-black"
+        : "bg-emerald-600 text-white"
+    }`}
+  >
+    {incident.severity}
+  </span>
+
+  <span
+    className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-wider ${
+      incident.status === "resolved"
+        ? "bg-emerald-600 text-white"
+        : "bg-blue-600 text-white"
+    }`}
+  >
+    {incident.status}
+  </span>
+</div>
             </InvestigationSection>
 
             <InvestigationSection icon={<Boxes className="h-3.5 w-3.5" />} title="Affected Resources">
@@ -100,8 +123,19 @@ if (investigationData?.maintenance) {
 
             {investigationData?.baggage ? (
                 <>
-            <p>Baggage: {investigationData.baggage.status}</p>
-            <p>Location: {investigationData.baggage.location}</p>
+            <div className="mt-2 rounded-md border border-slate-700 bg-slate-900 p-2">
+  <p className="text-[10px] uppercase tracking-widest text-slate-500">
+    Baggage
+  </p>
+
+  <p className="mt-1 font-medium">
+    {investigationData.baggage.status}
+  </p>
+
+  <p className="text-[11px] text-slate-500">
+    Location • {investigationData.baggage.location}
+  </p>
+</div>
                </> 
             ) : (
             <p className="text-slate-500">No baggage information.</p>
@@ -109,31 +143,56 @@ if (investigationData?.maintenance) {
 
             {investigationData?.maintenance ? (
              <>
-            <p>Maintenance: {investigationData.maintenance.maintenanceType}</p>
-            <p>Issue: {investigationData.maintenance.issue}</p>
+           <div className="mt-2 rounded-md border border-slate-700 bg-slate-900 p-2">
+  <p className="text-[10px] uppercase tracking-widest text-slate-500">
+    Maintenance
+  </p>
+
+  <p className="mt-1 font-medium">
+    {investigationData.maintenance.maintenanceType}
+  </p>
+
+  <p className="text-[11px] text-red-400">
+    {investigationData.maintenance.issue}
+  </p>
+</div>
               </>
             ) : (
             <p className="text-slate-500">No maintenance records.</p>
             )}
             </InvestigationSection>
 
-            <InvestigationSection icon={<History className="h-3.5 w-3.5" />} title="Event Timeline">
-              {investigationData?.gateEvents.length ? (
-                investigationData.gateEvents.map((event) => (
-                  <div key={event.eventId} className="mb-2">
-                    <p className="font-medium">{event.eventType}</p>
-                    <p className="text-slate-500 text-[11px]">
-                      {event.timestamp}
-                     </p>
-                  </div>
-                   ))
-                  ) : (
-                <p className="text-slate-500">No operational events recorded for this flight.</p>
-                  )}
-            </InvestigationSection>
+            <InvestigationSection
+  icon={<History className="h-3.5 w-3.5" />}
+  title="Event Timeline"
+>
+  {investigationData?.gateEvents.length ? (
+    investigationData.gateEvents.map((event) => (
+      <div
+        key={event.eventId}
+        className="mb-2 rounded-md border border-slate-800 bg-slate-900 p-2"
+      >
+        <p className="font-medium text-slate-100">
+          {event.eventType}
+        </p>
+
+        <p className="mt-1 text-[11px] text-slate-500">
+          {event.timestamp}
+        </p>
+      </div>
+    ))
+  ) : (
+    <p className="text-slate-500">
+      No gate events available.
+      Monitoring live airport feed...
+    </p>
+  )}
+</InvestigationSection>
 
             <InvestigationSection icon={<ClipboardList className="h-3.5 w-3.5" />} title="Recommended Action">
-              <p>{recommendation}</p>
+              <div className="rounded-md border border-cyan-700 bg-cyan-950/30 p-3">
+  <p className="rounded-md border border-cyan-700 bg-cyan-950/30 p-3 font-medium text-cyan-300">{recommendation}</p>
+</div>
             </InvestigationSection>
           </div>
         ) : (

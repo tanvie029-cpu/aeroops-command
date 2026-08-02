@@ -16,7 +16,7 @@ function GateGroup({ terminalLabel, gateIds, activeGateId, onGateClick, gateStat
           {terminalLabel}
         </h3>
       </div>
-      <div className="grid grid-cols-4 divide-x divide-slate-800">
+      <div className="grid grid-cols-4 gap-px bg-slate-800">
         {gateIds.map((gateId) => {
           const isSelected = activeGateId === gateId;
           const status = gateStatusMap?.[gateId];
@@ -30,8 +30,8 @@ function GateGroup({ terminalLabel, gateIds, activeGateId, onGateClick, gateStat
                   : status === "inactive"
                     ? "bg-slate-800 text-slate-500"
                     : "text-slate-300";
-          const commonClassName = `relative flex aspect-square flex-col items-center justify-center border-t border-slate-900 font-mono text-xs ${statusClassName} ${
-               isSelected ? "ring-2 ring-cyan-400 ring-inset" : ""}`;
+          const commonClassName = `relative flex h-32 flex-col items-center justify-center border-t border-slate-900 font-mono text-xs ${statusClassName} ${
+               isSelected? "relative z-10 ring-2 ring-cyan-400 ring-inset scale-[1.01]": ""}`;
 
           if (!onGateClick) {
             return (
@@ -48,10 +48,29 @@ function GateGroup({ terminalLabel, gateIds, activeGateId, onGateClick, gateStat
               type="button"
               aria-pressed={isSelected}
               onClick={() => onGateClick(gateId)}
-              className={`${commonClassName} focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-600`}
-            >
+              className={`${commonClassName} transition-all duration-200 hover:scale-[1.01] hover:brightness-110 hover:z-10 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400`} >
               <span aria-hidden="true" className="absolute top-0 h-1 w-3 -translate-y-1/2 bg-slate-700" />
-              {gateId}
+<>
+  <span
+    className={`mb-2 h-3 w-3 rounded-full ${
+      status === "delayed"
+        ? "bg-red-500 animate-pulse"
+        : status === "boarding"
+        ? "bg-amber-400 animate-pulse"
+        : status === "normal"
+        ? "bg-emerald-400"
+        : "bg-slate-600"
+    }`}
+  />
+
+  <span className="font-semibold tracking-wide">
+    {gateId}
+  </span>
+
+  <span className="mt-1 text-[9px] uppercase tracking-widest opacity-70">
+    {status ?? "normal"}
+  </span>
+</>
             </button>
           );
         })}
@@ -67,7 +86,7 @@ interface TaxiwayStripProps {
 function TaxiwayStrip({ label }: TaxiwayStripProps) {
   return (
     <div className="flex items-center gap-2 border-y border-dashed border-slate-800 py-1.5">
-      <span className="font-mono text-[11px] uppercase tracking-widest text-slate-500">
+      <span className="font-mono text-[11px] uppercase tracking-widest text-slate-400">
         {label}
       </span>
       <span className="h-px flex-1 bg-slate-800" aria-hidden="true" />
@@ -92,24 +111,14 @@ function RunwayStrip({ label }: RunwayStripProps) {
       </div>
       <Plane
         aria-hidden="true"
-        className="absolute left-6 top-1/2 h-4 w-4 -translate-y-1/2 rotate-90 text-slate-500"
+        className="absolute left-8 top-1/2 h-4 w-4 -translate-y-1/2 rotate-90 text-slate-400"
       />
-      <span className="relative bg-slate-900 px-3 font-mono text-sm font-semibold tracking-[0.2em] text-slate-200">
+      <span className="relative bg-slate-900 px-4 font-mono text-base font-bold tracking-[0.25em] text-slate-100">
         {label}
       </span>
-    </div>
-  );
-}
-interface LegendItemProps {
-  swatchClassName: string;
-  label: string;
-}
-
-function LegendItem({ swatchClassName, label }: LegendItemProps) {
-  return (
-    <div className="flex items-center gap-1.5">
-      <span className={`h-2.5 w-2.5 border border-slate-700 ${swatchClassName}`} aria-hidden="true" />
-      <span className="text-[11px] text-slate-400">{label}</span>
+      <p className="absolute bottom-1 text-[10px] uppercase tracking-widest text-emerald-400">
+       Active
+      </p>
     </div>
   );
 }
@@ -156,13 +165,6 @@ export function AirportSurface({
           <TaxiwayStrip label="Taxiway Bravo" />
         </div>
       </div>
-
-      <footer aria-label="Surface legend" className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 border-t border-slate-800 pt-2.5">
-        <LegendItem swatchClassName="bg-emerald-500" label="Normal" />
-        <LegendItem swatchClassName="bg-amber-500" label="Boarding" />
-        <LegendItem swatchClassName="bg-red-500" label="Delayed" />
-        <LegendItem swatchClassName="bg-blue-500" label="Taxiing" />
-      </footer>
     </section>
   );
 }

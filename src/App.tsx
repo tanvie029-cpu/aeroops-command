@@ -176,6 +176,17 @@ if (airportDataError) {
   );
 }
 
+function formatDelay(minutes: number) {
+  if (minutes < 60) return `${minutes} min`;
+
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+
+  return mins === 0
+    ? `${hours}h`
+    : `${hours}h ${mins}m`;
+}
+
   return (
     <MainLayout
       header={
@@ -192,30 +203,44 @@ if (airportDataError) {
     />
   </>
 }
+
+
       operationalAlerts={
   <OperationalAlerts alertCount={criticalAlerts}>
     {airportData?.flights
       .filter((flight) => flight.delayMinutes >= 60)
       .slice(0, 8)
       .map((flight) => (
-        <div
+        <button
           key={flight.flightId}
-          className="rounded-md border border-red-900 bg-red-950/20 p-2"
-        >
+          type="button"
+          onClick={() => handleGateSelect(flight.gate)}
+            className="w-full rounded-md border border-red-900 bg-red-950/20 p-2 text-left transition-all duration-200 hover:border-red-500 hover:bg-red-900/30 hover:shadow-lg hover:shadow-red-900/20">
+
           <div className="flex items-center justify-between">
             <span className="font-mono text-xs text-red-300">
               {flight.flightId}
             </span>
 
             <span className="text-[11px] text-red-400">
-              {flight.delayMinutes} min
+              {formatDelay(flight.delayMinutes)}
             </span>
           </div>
 
-          <p className="mt-1 text-[11px] text-slate-400">
-            {flight.delayReason} • Gate {flight.gate}
-          </p>
-        </div>
+          <div className="mt-2 space-y-1">
+  <p className="text-[11px] font-medium uppercase tracking-wide text-red-300">
+    {flight.delayReason}
+  </p>
+
+  <p className="text-[11px] text-slate-400">
+    Gate {flight.gate}
+  </p>
+
+  <p className="pt-1 text-[10px] uppercase tracking-wider text-red-500">
+    → Open Investigation
+  </p>
+</div>
+        </button>
       ))}
   </OperationalAlerts>
 }
