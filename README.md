@@ -1,75 +1,291 @@
-# React + TypeScript + Vite
+# ✈️ AeroOps Command
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+AeroOps Command is a modern Airport Operations Command Center dashboard built with **React, TypeScript, Vite, and Tailwind CSS**.
 
-Currently, two official plugins are available:
+The application simulates how airport operations teams monitor flights, investigate operational incidents, and visualize airport activity through an interactive control center.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 📸 Preview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+> Add screenshots here after deployment.
 
-## Expanding the ESLint configuration
+| Dashboard |
+|-----------|
+| *(Insert screenshot)* |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# 🚀 Features
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Airport Operations Dashboard
+- Interactive airport surface
+- Multi-terminal gate visualization
+- Clickable gate investigation
+- Live gate status indicators
+- Runway and taxiway visualization
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Operational Alerts
+- Flight delay monitoring
+- Critical operational alerts
+- Alert prioritization
+- Click-to-investigate workflow
+- Delay duration display
+
+---
+
+## Investigation Panel
+- Primary incident details
+- Operational impact analysis
+- Severity indicators
+- Incident status badges
+- Affected gate information
+- Baggage information
+- Maintenance logs
+- Event timeline
+- Recommended operational actions
+
+---
+
+## Operational Timeline
+- Chronological airport events
+- Flight event tracking
+- Boarding events
+- Operational history
+
+---
+
+## Dashboard Header
+- Airport health indicator
+- Active flights count
+- Critical alerts count
+- Security status
+- Weather indicator
+- UTC time
+- Global search bar
+
+---
+
+# 🛠 Tech Stack
+
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- Lucide React Icons
+
+---
+
+# 📂 Project Structure
 
 ```
+src
+│
+├── components
+│   ├── alerts
+│   ├── header
+│   ├── investigation
+│   ├── layout
+│   ├── surface
+│   └── timeline
+│
+├── services
+│   └── csvLoader.ts
+│
+├── data
+│   ├── flights.csv
+│   ├── gateEvents.csv
+│   ├── baggage.csv
+│   └── maintenance.csv
+│
+├── App.tsx
+└── main.tsx
+```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+# 📊 Data Model
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The dashboard uses CSV files as the data source.
+
+## Flights
+
+Contains:
+
+- Flight ID
+- Gate
+- Delay Minutes
+- Delay Reason
+- Flight Status
+
+---
+
+## Gate Events
+
+Contains:
+
+- Event ID
+- Flight ID
+- Gate
+- Event Type
+- Timestamp
+
+---
+
+## Baggage
+
+Contains
+
+- Flight ID
+- Status
+- Location
+
+---
+
+## Maintenance
+
+Contains
+
+- Gate
+- Maintenance Type
+- Issue
+
+---
+
+# 🔗 Data Relationships
+
+The dashboard combines multiple datasets to simulate real-world airport investigations.
 
 ```
+Flight
+   │
+   ├───────────────► Gate Events
+   │                     │
+   │                     ▼
+   │               Operational Timeline
+   │
+   ├───────────────► Baggage
+   │
+   └───────────────► Investigation Panel
+
+Gate
+   │
+   └───────────────► Maintenance Logs
+```
+
+Investigation data is generated by combining:
+
+- Flight Information
+- Gate Events
+- Baggage Records
+- Maintenance Records
+
+into a single investigation view.
+
+---
+
+# ⚙️ Installation
+
+Clone the repository
+
+```bash
+git clone <repository-url>
+```
+
+Go to project folder
+
+```bash
+cd aeroops-command
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Run development server
+
+```bash
+npm run dev
+```
+
+Open
+
+```
+http://localhost:5173
+```
+
+---
+
+# 🏗 Build
+
+Create production build
+
+```bash
+npm run build
+```
+
+Preview production build
+
+```bash
+npm run preview
+```
+
+---
+
+# 🎯 User Workflow
+
+1. Open dashboard
+2. View operational alerts
+3. Click an alert
+4. Investigation panel opens
+5. Airport surface highlights the corresponding gate
+6. Review baggage, maintenance and event history
+7. Review recommended operational action
+
+---
+
+# 📱 Responsive Design
+
+The application is designed for:
+
+- Desktop
+- Laptop
+- Tablet
+- Mobile devices
+
+using responsive layouts powered by Tailwind CSS.
+
+---
+
+# 🌟 Future Enhancements
+
+- Live WebSocket updates
+- AI-powered incident summaries
+- Flight search & filtering
+- Notification center
+- Dark / Light themes
+- Airport analytics dashboard
+- Authentication & role-based access
+- Real-time airport data integration
+- Flight detail modal
+- Interactive maps
+
+---
+
+# 👩‍💻 Author
+
+**Tanvi Kadam**
+
+Computer Engineering Student
+
+Frontend Developer
+
+---
+
+# 📄 License
+
+This project was developed for educational and hackathon purposes.
