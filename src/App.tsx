@@ -25,16 +25,32 @@ function App() {
   const [isLoadingAirportData, setIsLoadingAirportData] = useState(true);
   const [airportDataError, setAirportDataError] = useState<string | null>(null);
 
-  const handleGateSelect = (gateId: string) => {
+
+
+  function deriveSeverity(delayMinutes: number): IncidentSeverity {
+  if (delayMinutes >= 60) return "critical";
+  if (delayMinutes >= 30) return "high";
+  if (delayMinutes >= 10) return "medium";
+  return "low";
+}
+
+const handleGateSelect = (gateId: string) => {
+  const matchingFlight = airportData?.flights.find((flight) => flight.gate === gateId);
+
+  if (!matchingFlight) {
+    setActiveIncident(null);
+    return;
+  }
+
   setActiveIncident({
-   id: "INC-001",
-   flightId: "AI203",
-   gate: gateId,
-   type: "Baggage Delay",
-   severity: "critical",
-   status: "open",
+    id: matchingFlight.flightId,
+    flightId: matchingFlight.flightId,
+    gate: matchingFlight.gate,
+    type: matchingFlight.delayReason,
+    severity: deriveSeverity(matchingFlight.delayMinutes),
+    status:matchingFlight.flightStatus === "Departed" || matchingFlight.flightStatus === "Arrived"? "resolved": "open",
   });
-  };
+};
   
   useEffect(() => {
   let isCancelled = false;
