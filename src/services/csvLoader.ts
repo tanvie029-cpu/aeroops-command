@@ -3,11 +3,36 @@ import Papa from "papaparse";
 export interface FlightRecord {
   flightId: string;
   airline: string;
-  origin: string;
-  destination: string;
+  airlineCode: string;
+  originAirport: string;
+  destinationAirport: string;
+  scheduledDeparture: string;
+  actualDeparture: string;
+  scheduledArrival: string;
+  actualArrival: string;
+  aircraftType: string;
+  aircraftRegistration: string;
+  aircraftCapacity: number;
+  passengerCount: number;
+  flightStatus: string;
+  delayMinutes: number;
+  delayReason: string;
+  terminal: string;
   gate: string;
-  scheduledTime: string;
-  status: string;
+  internationalFlight: boolean;
+  routeDistanceKm: number;
+  operationalMetric: number;
+  lastUpdated: string;
+  boardingCompleted: boolean;
+  weatherCondition: string;
+  operationalScore: number;
+  utilizationScore: number;
+  shift: string;
+  dayOfWeek: string;
+  holiday: boolean;
+  season: string;
+  routeCategory: string;
+  reservedField: string;
 }
 
 export interface GateEventRecord {
