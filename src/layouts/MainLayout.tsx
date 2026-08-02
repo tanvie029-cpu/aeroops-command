@@ -31,7 +31,7 @@ export function MainLayout({
 
         <main
           aria-label="Airport Surface"
-          className="order-1 flex-1 overflow-hidden bg-slate-950 lg:order-2"
+          className="order-1 flex-1 overflow-y-auto bg-slate-950 lg:order-2"
         >
           {airportSurface}
         </main>
@@ -45,11 +45,11 @@ export function MainLayout({
       </div>
 
       <footer
-        aria-label="Operational Timeline"
-        className="h-40 shrink-0 overflow-y-auto border-t border-slate-800 bg-slate-900 px-4 py-3"
-      >
-        {operationalTimeline}
-      </footer>
+  aria-label="Operational Timeline"
+  className="h-16 shrink-0 overflow-y-auto border-t border-slate-800 bg-slate-900 px-4 py-2"
+>
+  {operationalTimeline}
+</footer>
     </div>
   );
 }

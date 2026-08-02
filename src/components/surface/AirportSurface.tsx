@@ -38,12 +38,12 @@ function GateGroup({
               : status === "delayed"
               ? "bg-red-500/10 text-red-300"
               : "bg-slate-900 text-slate-500";
-              
+
          if (gateId.startsWith("EMPTY-")) {
   return (
     <div
       key={gateId}
-      className="h-12 bg-slate-900"
+      className="h-14 border border-slate-800 bg-slate-900/40"
     />
   );
 }
@@ -56,7 +56,7 @@ function GateGroup({
               className={`
                 relative
                 flex
-                h-12
+                h-14
                 flex-col
                 items-center
                 justify-center
@@ -82,7 +82,7 @@ function GateGroup({
                 }`}
               />
 
-              <span className="font-semibold">
+              <span className="text-[13px] font-semibold tracking-wide">
                 {gateId}
               </span>
             </button>
@@ -121,19 +121,8 @@ function RunwayStrip({ label }: { label: string }) {
       <span className="relative bg-slate-900 px-4 font-mono text-sm font-bold tracking-[0.25em] text-white">
         {label}
       </span>
-
-      <span className="absolute bottom-1 text-[10px] uppercase tracking-widest text-emerald-400">
-        Active
-      </span>
     </div>
   );
-}
-
-function fillTerminal(gates: string[], size: number) {
-  return [
-    ...gates,
-    ...Array.from({ length: Math.max(0, size - gates.length) }, (_, i) => `EMPTY-${i}`),
-  ];
 }
 
 interface AirportSurfaceProps {
@@ -156,10 +145,10 @@ const sortedGates = [...gates].sort((a, b) => {
   return numA - numB;   
 });
 
-const terminalA = fillTerminal(sortedGates.slice(0,12),12);
-const terminalB = fillTerminal(sortedGates.slice(12,24),12);
-const terminalC = fillTerminal(sortedGates.slice(24,36),12);
-const terminalD = fillTerminal(sortedGates.slice(36),14);
+const terminalA = sortedGates.slice(0, 13);
+const terminalB = sortedGates.slice(13, 26);
+const terminalC = sortedGates.slice(26, 38);
+const terminalD = sortedGates.slice(38, 50);
 
   return (
     <section
@@ -167,7 +156,7 @@ const terminalD = fillTerminal(sortedGates.slice(36),14);
       flex
       h-full
       flex-col
-      overflow-hidden
+      overflow-y-auto
       bg-slate-950
       bg-[linear-gradient(to_right,rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.06)_1px,transparent_1px)]
       bg-[size:24px_24px]
@@ -177,7 +166,7 @@ const terminalD = fillTerminal(sortedGates.slice(36),14);
     >
       <header className="mb-2">
         <h2 className="text-sm font-semibold text-white">
-          Airport Surface Overview
+          Airport Operations Surface
         </h2>
 
         <p className="text-[11px] uppercase tracking-widest text-slate-500">
@@ -185,7 +174,7 @@ const terminalD = fillTerminal(sortedGates.slice(36),14);
         </p>
       </header>
 
-      <div className="grid gap-2 lg:grid-cols-2">
+      <div className="grid gap-2 lg:grid-cols-2 shrink-0">
 
         <GateGroup
           terminalLabel="Terminal A"
@@ -221,7 +210,7 @@ const terminalD = fillTerminal(sortedGates.slice(36),14);
 
       </div>
 
-      <div className="mt-2 space-y-2">
+      <div className="mt-4 space-y-2 shrink-0">
 
         <TaxiwayStrip label="Taxiway Alpha" />
 
