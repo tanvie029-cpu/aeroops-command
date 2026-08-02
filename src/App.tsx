@@ -1,4 +1,3 @@
-// src/App.tsx
 import { useState } from "react";
 import { MainLayout } from "./layouts/MainLayout";
 import { Header } from "./components/layout/Header";
