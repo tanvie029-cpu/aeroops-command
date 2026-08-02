@@ -1,3 +1,4 @@
+// src/components/investigation/InvestigationPanel.tsx
 import type { ReactNode } from "react";
 import {
   Radar,
@@ -7,6 +8,7 @@ import {
   History,
   ClipboardList,
 } from "lucide-react";
+import type { ActiveIncident } from "../../App";
 
 interface InvestigationSectionProps {
   icon: ReactNode;
@@ -34,22 +36,12 @@ function InvestigationSection({ icon, title, children }: InvestigationSectionPro
 }
 
 interface InvestigationPanelProps {
-  hasActiveInvestigation: boolean;
-  primaryIncident?: ReactNode;
-  operationalImpact?: ReactNode;
-  affectedResources?: ReactNode;
-  eventTimeline?: ReactNode;
-  recommendedAction?: ReactNode;
+  activeIncident: ActiveIncident | null;
 }
 
-export function InvestigationPanel({
-  hasActiveInvestigation,
-  primaryIncident,
-  operationalImpact,
-  affectedResources,
-  eventTimeline,
-  recommendedAction,
-}: InvestigationPanelProps) {
+export function InvestigationPanel({ activeIncident }: InvestigationPanelProps) {
+  const hasActiveInvestigation = activeIncident !== null;
+
   return (
     <section aria-labelledby="investigation-panel-heading" className="flex h-full flex-col">
       <div className="border-b border-slate-800 px-3 py-2.5">
@@ -62,22 +54,25 @@ export function InvestigationPanel({
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {hasActiveInvestigation ? (
+        {hasActiveInvestigation && activeIncident ? (
           <div className="flex flex-col">
             <InvestigationSection icon={<AlertOctagon className="h-3.5 w-3.5" />} title="Primary Incident">
-              {primaryIncident}
+              <p>Incident: {activeIncident.id}</p>
+              {activeIncident.type && <p>Type: {activeIncident.type}</p>}
+              {activeIncident.flightId && <p>Flight: {activeIncident.flightId}</p>}
             </InvestigationSection>
             <InvestigationSection icon={<Gauge className="h-3.5 w-3.5" />} title="Operational Impact">
-              {operationalImpact}
+              <p className="capitalize">Severity: {activeIncident.severity}</p>
+              <p className="capitalize">Status: {activeIncident.status}</p>
             </InvestigationSection>
             <InvestigationSection icon={<Boxes className="h-3.5 w-3.5" />} title="Affected Resources">
-              {affectedResources}
+              <p>Gate: {activeIncident.gate}</p>
             </InvestigationSection>
             <InvestigationSection icon={<History className="h-3.5 w-3.5" />} title="Event Timeline">
-              {eventTimeline}
+              <p>Awaiting operational event updates.</p>
             </InvestigationSection>
             <InvestigationSection icon={<ClipboardList className="h-3.5 w-3.5" />} title="Recommended Action">
-              {recommendedAction}
+              <p>Dispatch ground crew and notify gate operations.</p>
             </InvestigationSection>
           </div>
         ) : (

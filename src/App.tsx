@@ -10,7 +10,7 @@ import { InvestigationPanel } from "./components/investigation/InvestigationPane
 type IncidentSeverity = "low" | "medium" | "high" | "critical";
 type IncidentStatus = "open" | "acknowledged" | "resolved";
 
-interface ActiveIncident {
+export interface ActiveIncident {
   id: string;
   flightId: string;
   gate: string;
@@ -23,14 +23,14 @@ function App() {
   const [activeIncident, setActiveIncident] = useState<ActiveIncident | null>(null);
 
   const handleGateSelect = (gateId: string) => {
-    setActiveIncident({
-      id: gateId,
-      flightId: "",
-      gate: gateId,
-      type: "",
-      severity: "low",
-      status: "open",
-    });
+  setActiveIncident({
+   id: "INC-001",
+   flightId: "AI203",
+   gate: gateId,
+   type: "Baggage Delay",
+   severity: "critical",
+   status: "open",
+  });
   };
 
   return (
@@ -56,8 +56,8 @@ function App() {
         />
       }
       investigationPanel={
-        <InvestigationPanel hasActiveInvestigation={activeIncident !== null} />
-      }
+         <InvestigationPanel activeIncident={activeIncident} />
+        }
       operationalTimeline={
         <div className="text-xs text-slate-500">Operational Timeline Coming Soon</div>
       }
