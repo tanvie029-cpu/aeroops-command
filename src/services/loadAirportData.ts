@@ -66,6 +66,16 @@ function mapRowToFlightRecord(row: RawRow): FlightRecord {
   };
 }
 
+function mapRowToGateEvent(row: RawRow): GateEventRecord {
+  return {
+    eventId: row[0],
+    flightId: row[1],
+    gate: row[2],
+    eventType: row[4],
+    timestamp: row[5],
+  };
+}
+
 export interface AirportData {
   flights: FlightRecord[];
   gateEvents: GateEventRecord[];
@@ -88,12 +98,23 @@ function parseCsvFromUrl<T>(url: string): Promise<T[]> {
 export async function loadAirportData(): Promise<AirportData> {
  const [flightRows, gateEvents, baggage, maintenanceLogs] = await Promise.all([
   parseRawCsvFromUrl("/data/flights.csv"),
-  parseCsvFromUrl<GateEventRecord>("/data/gate_events.csv"),
+  parseRawCsvFromUrl("/data/gate_events.csv"),
   parseCsvFromUrl<BaggageRecord>("/data/baggage.csv"),
   parseCsvFromUrl<MaintenanceLogRecord>("/data/maintenance_logs.csv"),
 ]);
 
-const flights = flightRows.map(mapRowToFlightRecord);
+const flights = flightRows
+  .slice(1)
+  .map(mapRowToFlightRecord);
 
-  return { flights, gateEvents, baggage, maintenanceLogs };
+const gateEventsData = gateEvents
+  .slice(1)
+  .map(mapRowToGateEvent);  
+
+  return {
+  flights,
+  gateEvents: gateEventsData,
+  baggage,
+  maintenanceLogs,
+};
 }

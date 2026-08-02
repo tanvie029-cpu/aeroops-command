@@ -1,11 +1,14 @@
 import { Plane } from "lucide-react";
+type GateStatus = "normal" | "boarding" | "delayed" | "inactive";
+
 interface GateGroupProps {
   terminalLabel: string;
   gateIds: readonly string[];
   activeGateId?: string | null;
   onGateClick?: (gateId: string) => void;
+  gateStatusMap?: Record<string, GateStatus>;
 }
-function GateGroup({ terminalLabel, gateIds, activeGateId, onGateClick }: GateGroupProps) {
+function GateGroup({ terminalLabel, gateIds, activeGateId, onGateClick, gateStatusMap }: GateGroupProps) {
   return (
     <div className="border border-slate-800">
       <div className="border-b border-slate-800 bg-slate-900 px-2.5 py-1.5">
@@ -16,9 +19,19 @@ function GateGroup({ terminalLabel, gateIds, activeGateId, onGateClick }: GateGr
       <div className="grid grid-cols-4 divide-x divide-slate-800">
         {gateIds.map((gateId) => {
           const isSelected = activeGateId === gateId;
-          const commonClassName = `relative flex aspect-square flex-col items-center justify-center border-t border-slate-900 font-mono text-xs ${
-            isSelected ? "bg-slate-800 text-slate-100" : "text-slate-300"
-          }`;
+          const status = gateStatusMap?.[gateId];
+          const statusClassName =
+            status === "normal"
+              ? "bg-emerald-500/10 text-emerald-300"
+              : status === "boarding"
+                ? "bg-amber-500/10 text-amber-300"
+                : status === "delayed"
+                  ? "bg-red-500/10 text-red-300"
+                  : status === "inactive"
+                    ? "bg-slate-800 text-slate-500"
+                    : "text-slate-300";
+          const commonClassName = `relative flex aspect-square flex-col items-center justify-center border-t border-slate-900 font-mono text-xs ${statusClassName} ${
+               isSelected ? "ring-2 ring-cyan-400 ring-inset" : ""}`;
 
           if (!onGateClick) {
             return (
@@ -106,12 +119,14 @@ interface AirportSurfaceProps {
   gates: readonly string[];
   activeGateId?: string | null;
   onGateClick?: (gateId: string) => void;
+  gateStatusMap?: Record<string, GateStatus>;
 }
 
 export function AirportSurface({
   gates,
   activeGateId,
   onGateClick,
+  gateStatusMap,
 }: AirportSurfaceProps) {
   return (
     <section aria-labelledby="airport-surface-heading" className="flex h-full flex-col overflow-y-auto bg-slate-950 bg-[linear-gradient(to_right,rgba(148,163,184,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(148,163,184,0.06)_1px,transparent_1px)] bg-[size:24px_24px] px-4 py-3">
@@ -126,12 +141,13 @@ export function AirportSurface({
 
       <div className="flex flex-1 flex-col gap-3">
         <div>
-    <GateGroup
-    terminalLabel="Terminal Gates"
-    gateIds={gates}
-    activeGateId={activeGateId}
-    onGateClick={onGateClick}
-  />
+   <GateGroup
+  terminalLabel="Airport Gates"
+  gateIds={gates}
+  activeGateId={activeGateId}
+  onGateClick={onGateClick}
+  gateStatusMap={gateStatusMap}
+/>
 </div>
 
         <div className="flex flex-col gap-2">
