@@ -48,15 +48,16 @@ export interface BaggageRecord {
   flightId: string;
   status: string;
   location: string;
-  timestamp: string;
+  lastScan: string;
 }
 
 export interface MaintenanceLogRecord {
-  logId: string;
-  assetId: string;
-  description: string;
-  status: string;
-  timestamp: string;
+  workOrderId: string;
+  aircraftId: string;
+  flightId: string;
+  maintenanceType: string;
+  issue: string;
+  completed: boolean;
 }
 
 function parseCsvFile<T>(file: File): Promise<T[]> {

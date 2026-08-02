@@ -76,6 +76,27 @@ function mapRowToGateEvent(row: RawRow): GateEventRecord {
   };
 }
 
+function mapRowToBaggage(row: RawRow): BaggageRecord {
+  return {
+    baggageId: row[0],
+    flightId: row[2],
+    location: row[7],
+    status: row[11],
+    lastScan: row[15],
+  };
+}
+
+function mapRowToMaintenance(row: RawRow): MaintenanceLogRecord {
+  return {
+    workOrderId: row[0],
+    aircraftId: row[1],
+    flightId: row[2],
+    maintenanceType: row[3],
+    issue: row[9],
+    completed: toBoolean(row[13]),
+  };
+}
+
 export interface AirportData {
   flights: FlightRecord[];
   gateEvents: GateEventRecord[];
@@ -83,24 +104,12 @@ export interface AirportData {
   maintenanceLogs: MaintenanceLogRecord[];
 }
 
-function parseCsvFromUrl<T>(url: string): Promise<T[]> {
-  return new Promise((resolve, reject) => {
-    Papa.parse<T>(url, {
-      header: true,
-      skipEmptyLines: true,
-      download: true,
-      complete: (results) => resolve(results.data),
-      error: (error: Error) => reject(error),
-    });
-  });
-}
-
 export async function loadAirportData(): Promise<AirportData> {
  const [flightRows, gateEvents, baggage, maintenanceLogs] = await Promise.all([
   parseRawCsvFromUrl("/data/flights.csv"),
   parseRawCsvFromUrl("/data/gate_events.csv"),
-  parseCsvFromUrl<BaggageRecord>("/data/baggage.csv"),
-  parseCsvFromUrl<MaintenanceLogRecord>("/data/maintenance_logs.csv"),
+  parseRawCsvFromUrl("/data/baggage.csv"),
+  parseRawCsvFromUrl("/data/maintenance_logs.csv"),
 ]);
 
 const flights = flightRows
@@ -109,12 +118,20 @@ const flights = flightRows
 
 const gateEventsData = gateEvents
   .slice(1)
-  .map(mapRowToGateEvent);  
+  .map(mapRowToGateEvent);
+  
+const baggageData = (baggage as RawRow[])
+  .slice(1)
+  .map(mapRowToBaggage);  
+
+const maintenanceData = maintenanceLogs
+  .slice(1)
+  .map(mapRowToMaintenance);  
 
   return {
   flights,
   gateEvents: gateEventsData,
-  baggage,
-  maintenanceLogs,
+  baggage: baggageData,
+  maintenanceLogs: maintenanceData,
 };
 }

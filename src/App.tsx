@@ -100,23 +100,7 @@ const handleGateSelect = (gateId: string) => {
   async function fetchData() {
     try {
       const data = await loadAirportData();
-
-      console.table(data.flights.slice(0, 3));
-      console.log(data.flights[0]);
-      console.log("Gate Events:", data.gateEvents[0]);
-      console.log("Baggage:", data.baggage[0]);
-      console.log("Maintenance:", data.maintenanceLogs[0]);
-
       setAirportData(data);
-
-      console.table(data.flights.slice(0, 10).map(f => ({
-       flight: f.flightId,
-       gate: f.gate,
-       terminal: f.terminal,
-       delayReason: f.delayReason,
-})));
-
-console.table(data.gateEvents.slice(0, 10));
 
       if (!isCancelled) {
         setAirportData(data);

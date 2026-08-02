@@ -1,4 +1,3 @@
-// src/components/investigation/InvestigationPanel.tsx
 import type { ReactNode } from "react";
 import {
   Radar,
