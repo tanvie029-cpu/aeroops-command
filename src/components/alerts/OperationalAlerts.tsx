@@ -1,12 +1,12 @@
 import { ListFilter, ShieldCheck } from "lucide-react";
 
-interface AlertsPanelProps {
+interface OperationalAlertsProps {
   alertCount: number;
   children?: React.ReactNode;
   onFilterClick?: () => void;
 }
 
-export function AlertsPanel({ alertCount, children, onFilterClick }: AlertsPanelProps) {
+export function OperationalAlerts({ alertCount, children, onFilterClick }: OperationalAlertsProps) {
   const hasAlerts = alertCount > 0;
 
   return (

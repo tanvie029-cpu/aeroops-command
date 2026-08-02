@@ -2,18 +2,18 @@ import type { ReactNode } from "react";
 
 interface MainLayoutProps {
   header: ReactNode;
-  alertsPanel: ReactNode;
-  operationsMap: ReactNode;
-  incidentDetails: ReactNode;
-  operationsTimeline: ReactNode;
+  operationalAlerts: ReactNode;
+  airportSurface: ReactNode;
+  investigationPanel: ReactNode;
+  operationalTimeline: ReactNode;
 }
 
 export function MainLayout({
   header,
-  alertsPanel,
-  operationsMap,
-  incidentDetails,
-  operationsTimeline,
+  operationalAlerts,
+  airportSurface,
+  investigationPanel,
+  operationalTimeline,
 }: MainLayoutProps) {
   return (
     <div className="flex h-screen flex-col bg-slate-950 text-slate-100">
@@ -23,32 +23,32 @@ export function MainLayout({
 
       <div className="flex flex-1 flex-col overflow-hidden lg:flex-row">
         <aside
-          aria-label="Alerts"
+          aria-label="Operational Alerts"
           className="order-2 w-full overflow-y-auto border-b border-slate-800 bg-slate-900 lg:order-1 lg:w-72 lg:border-b-0 lg:border-r"
         >
-          {alertsPanel}
+          {operationalAlerts}
         </aside>
 
         <main
-          aria-label="Airport Operations Map"
+          aria-label="Airport Surface"
           className="order-1 flex-1 overflow-hidden bg-slate-950 lg:order-2"
         >
-          {operationsMap}
+          {airportSurface}
         </main>
 
         <aside
-          aria-label="Incident Details"
+          aria-label="Investigation Panel"
           className="order-3 w-full overflow-y-auto border-t border-slate-800 bg-slate-900 lg:w-80 lg:border-l lg:border-t-0"
         >
-          {incidentDetails}
+          {investigationPanel}
         </aside>
       </div>
 
       <footer
-        aria-label="Operations Timeline"
+        aria-label="Operational Timeline"
         className="h-40 shrink-0 overflow-y-auto border-t border-slate-800 bg-slate-900 px-4 py-3"
       >
-        {operationsTimeline}
+        {operationalTimeline}
       </footer>
     </div>
   );
