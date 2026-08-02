@@ -7,6 +7,11 @@ import {
   History,
   ClipboardList,
 } from "lucide-react";
+import type {
+  GateEventRecord,
+  BaggageRecord,
+  MaintenanceLogRecord,
+} from "../../services/csvLoader";
 import type { ActiveIncident } from "../../App";
 
 interface InvestigationSectionProps {
@@ -34,12 +39,36 @@ function InvestigationSection({ icon, title, children }: InvestigationSectionPro
   );
 }
 
+interface InvestigationData {
+  incident: ActiveIncident;
+  gateEvents: GateEventRecord[];
+  baggage?: BaggageRecord;
+  maintenance?: MaintenanceLogRecord;
+}
 interface InvestigationPanelProps {
-  activeIncident: ActiveIncident | null;
+  investigationData: InvestigationData | null;
 }
 
-export function InvestigationPanel({ activeIncident }: InvestigationPanelProps) {
-  const hasActiveInvestigation = activeIncident !== null;
+export function InvestigationPanel({
+  investigationData,
+}: InvestigationPanelProps) {
+  const hasActiveInvestigation = investigationData !== null;
+  const incident = investigationData?.incident;
+
+  let recommendation = "Continue normal operations.";
+
+if (investigationData?.maintenance) {
+  recommendation = "Dispatch engineering team immediately.";
+} else if (incident?.severity === "critical") {
+  recommendation = "Notify passengers and airport operations immediately.";
+} else if (
+  investigationData?.baggage &&
+  investigationData.baggage.status !== "Loaded"
+) {
+  recommendation = "Hold departure until baggage clearance.";
+} else if (investigationData?.gateEvents.length) {
+  recommendation = "Continue gate monitoring and boarding operations.";
+}
 
   return (
     <section aria-labelledby="investigation-panel-heading" className="flex h-full flex-col">
@@ -53,25 +82,58 @@ export function InvestigationPanel({ activeIncident }: InvestigationPanelProps) 
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {hasActiveInvestigation && activeIncident ? (
+        {hasActiveInvestigation && incident ? (
           <div className="flex flex-col">
             <InvestigationSection icon={<AlertOctagon className="h-3.5 w-3.5" />} title="Primary Incident">
-              <p>Incident: {activeIncident.id}</p>
-              {activeIncident.type && <p>Type: {activeIncident.type}</p>}
-              {activeIncident.flightId && <p>Flight: {activeIncident.flightId}</p>}
+              <p>Incident: {incident.id}</p>
+              {incident.type && <p>Type: {incident.type}</p>}
+              {incident.flightId && <p>Flight: {incident.flightId}</p>}
             </InvestigationSection>
+
             <InvestigationSection icon={<Gauge className="h-3.5 w-3.5" />} title="Operational Impact">
-              <p className="capitalize">Severity: {activeIncident.severity}</p>
-              <p className="capitalize">Status: {activeIncident.status}</p>
+              <p className="capitalize">Severity: {incident.severity}</p>
+              <p className="capitalize">Status: {incident.status}</p>
             </InvestigationSection>
+
             <InvestigationSection icon={<Boxes className="h-3.5 w-3.5" />} title="Affected Resources">
-              <p>Gate: {activeIncident.gate}</p>
+              <p>Gate: {incident.gate}</p>
+
+            {investigationData?.baggage ? (
+                <>
+            <p>Baggage: {investigationData.baggage.status}</p>
+            <p>Location: {investigationData.baggage.location}</p>
+               </> 
+            ) : (
+            <p className="text-slate-500">No baggage information.</p>
+              )}
+
+            {investigationData?.maintenance ? (
+             <>
+            <p>Maintenance: {investigationData.maintenance.maintenanceType}</p>
+            <p>Issue: {investigationData.maintenance.issue}</p>
+              </>
+            ) : (
+            <p className="text-slate-500">No maintenance records.</p>
+            )}
             </InvestigationSection>
+
             <InvestigationSection icon={<History className="h-3.5 w-3.5" />} title="Event Timeline">
-              <p>Awaiting operational event updates.</p>
+              {investigationData?.gateEvents.length ? (
+                investigationData.gateEvents.map((event) => (
+                  <div key={event.eventId} className="mb-2">
+                    <p className="font-medium">{event.eventType}</p>
+                    <p className="text-slate-500 text-[11px]">
+                      {event.timestamp}
+                     </p>
+                  </div>
+                   ))
+                  ) : (
+                <p className="text-slate-500">No operational events recorded for this flight.</p>
+                  )}
             </InvestigationSection>
+
             <InvestigationSection icon={<ClipboardList className="h-3.5 w-3.5" />} title="Recommended Action">
-              <p>Dispatch ground crew and notify gate operations.</p>
+              <p>{recommendation}</p>
             </InvestigationSection>
           </div>
         ) : (

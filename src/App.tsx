@@ -7,6 +7,7 @@ import { AirportSurface } from "./components/surface/AirportSurface";
 import { InvestigationPanel } from "./components/investigation/InvestigationPanel";
 import { loadAirportData, type AirportData } from "./services/loadAirportData";
 import {OperationalTimeline,TimelineEvent,} from "./components/timeline/OperationalTimeline";
+import type {GateEventRecord,BaggageRecord,MaintenanceLogRecord,} from "./services/csvLoader";
 
 type IncidentSeverity = "low" | "medium" | "high" | "critical";
 type IncidentStatus = "open" | "acknowledged" | "resolved";
@@ -21,8 +22,15 @@ export interface ActiveIncident {
   status: IncidentStatus;
 }
 
+interface InvestigationData {
+  incident: ActiveIncident;
+  gateEvents: GateEventRecord[];
+  baggage?: BaggageRecord;
+  maintenance?: MaintenanceLogRecord;
+}
+
 function App() {
-  const [activeIncident, setActiveIncident] = useState<ActiveIncident | null>(null);
+  const [investigationData, setInvestigationData] =useState<InvestigationData | null>(null);
   const [airportData, setAirportData] = useState<AirportData | null>(null);
   const [isLoadingAirportData, setIsLoadingAirportData] = useState(true);
   const [airportDataError, setAirportDataError] = useState<string | null>(null);
@@ -80,19 +88,44 @@ const handleGateSelect = (gateId: string) => {
   );
 
   if (!matchingFlight) {
-    setActiveIncident(null);
-    return;
-  }
+  setInvestigationData(null);
+  return;
+}
 
-  setActiveIncident({
-    id: matchingFlight.flightId,
-    flightId: matchingFlight.flightId,
-    gate: matchingFlight.gate,
-    type: matchingFlight.delayReason,
-    severity: deriveSeverity(matchingFlight.delayMinutes),
-    status:matchingFlight.flightStatus === "Departed" || matchingFlight.flightStatus === "Arrived"? "resolved": "open",
-  });
+  const incident: ActiveIncident = {
+  id: matchingFlight.flightId,
+  flightId: matchingFlight.flightId,
+  gate: matchingFlight.gate,
+  type: matchingFlight.delayReason,
+  severity: deriveSeverity(matchingFlight.delayMinutes),
+  status:
+    matchingFlight.flightStatus === "Departed" ||
+    matchingFlight.flightStatus === "Arrived"
+      ? "resolved"
+      : "open",
 };
+
+const gateEvents = airportData?.gateEvents.filter(
+  (event) => event.flightId === incident.flightId
+) ?? [];
+
+const baggage = airportData?.baggage.find(
+  (bag) => bag.flightId === incident.flightId
+);
+
+const maintenance = airportData?.maintenanceLogs.find(
+  (log) => log.flightId === incident.flightId
+);
+
+setInvestigationData({
+  incident,
+  gateEvents,
+  baggage,
+  maintenance,
+});
+};
+
+
   
   useEffect(() => {
   let isCancelled = false;
@@ -196,7 +229,7 @@ if (airportDataError) {
   />
 }
       investigationPanel={
-         <InvestigationPanel activeIncident={activeIncident} />
+         <InvestigationPanel investigationData={investigationData} />
         }
         operationalTimeline={
   <OperationalTimeline>
