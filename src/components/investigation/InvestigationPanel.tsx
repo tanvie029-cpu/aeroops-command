@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import {
-  SearchCode,
+  Radar,
   AlertOctagon,
   Gauge,
   Boxes,
@@ -82,7 +82,7 @@ export function InvestigationPanel({
           </div>
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-2 px-4 py-10 text-center">
-            <SearchCode className="h-6 w-6 text-slate-600" aria-hidden="true" />
+            <Radar className="h-6 w-6 text-slate-600" aria-hidden="true" />
             <p className="text-xs font-medium text-slate-400">No active investigation</p>
             <p className="max-w-[15rem] text-[11px] leading-relaxed text-slate-600">
               Select a flight, gate, baggage event or security alert from the workspace to begin
